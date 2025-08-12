@@ -1,18 +1,20 @@
-# Trunk Playwright Reporter
+<!-- markdownlint-disable first-line-heading -->
 
-To use the Trunk Playwright custom reporter
+[![Trunk.io](https://github.com/user-attachments/assets/c98a90ee-439b-4a9c-bb9a-69dc0e7e2c7e)](https://trunk.io)
 
-Add the package: 
+# Trunk.io Playwright Reporter
+
+This custom Playwright reporter generates the Junit XML test report used to upload to Trunk.io.
+
+## Get Started
+
+Install the package: 
 
 ```bash
-bun add @trunkio/trunk-reporter
+npm install @trunkio/trunk-reporter
 ```
 
-Confifure Playwright to use reporter:
-
-**Config**
-
-Add reportet to `playwright.config.ts`
+Update `playwright.config.ts`:
 
 ```ts
 import { defineConfig } from '@playwright/test';
@@ -27,7 +29,16 @@ export default defineConfig({
 });
 ```
 
-**CLI**
+**Or using the CLI**
 ```bash
 playwright test --reporter="trunk-reporter"
 ```
+
+## Feedback
+
+Join the [Trunk Community Slack][slack]. ❤️
+
+[slack]: https://slack.trunk.io
+[docs]: https://docs.trunk.io
+[vscode]: https://marketplace.visualstudio.com/items?itemName=Trunk.io
+
