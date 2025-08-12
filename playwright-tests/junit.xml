@@ -1,0 +1,8 @@
+<testsuites id="" name="" tests="2" failures="0" skipped="0" errors="0" time="3.5298700000000003">
+<testsuite name="demo.test.ts" timestamp="2025-08-12T15:45:08.636Z" hostname="" tests="2" failures="0" skipped="0" time="0.151" errors="0">
+<testcase name="Demo test suite › home page has expected h1" classname="demo.test.ts" time="0.084">
+</testcase>
+<testcase name="Demo test suite › home page has expected p" classname="demo.test.ts" time="0.067">
+</testcase>
+</testsuite>
+</testsuites>

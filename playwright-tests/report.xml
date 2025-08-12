@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="2" failures="0" errors="0" skipped="0">
+  <testsuite name="playwright tests" timestamp="2025-08-12T15:49:29.073Z" tests="2" failures="0" errors="0" skipped="0">
+    <testcase name="home page has expected h1" time="89" file="/Users/iamwill/code/@trunk-io/trunk-reporter/playwright-tests/e2e/demo.test.ts" classname="Demo test suite"/>
+    <testcase name="home page has expected p" time="67" file="/Users/iamwill/code/@trunk-io/trunk-reporter/playwright-tests/e2e/demo.test.ts" classname="Demo test suite"/>
+  </testsuite>
+</testsuites>

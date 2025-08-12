@@ -1,0 +1,19 @@
+{
+  "name": "trunk-reporter",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "test:e2e": "echo Hi"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "@playwright/test": "^1.54.2",
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^5.2.5",
+    "junit-report-builder": "^5.1.1"
+  }
+}

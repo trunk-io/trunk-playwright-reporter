@@ -1,0 +1,13 @@
+// noinspection JSUnusedGlobalSymbols
+
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+	webServer: {
+		command: 'npm run build && npm run preview',
+		port: 4173
+	},
+	testDir: 'e2e',
+	reporter: 'trunk-reporter'
+	//reporter: [['list'], ['junit', { outputFile: 'junit.xml' }]]
+});
