@@ -1,6 +1,6 @@
 {
   "name": "trunk-reporter",
-  "module": "src/index.ts",
+  "module": "index.ts",
   "type": "module",
   "scripts": {
     "target-tests": "cd test/target && npx playwright test"
