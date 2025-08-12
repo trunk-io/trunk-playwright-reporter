@@ -8,6 +8,6 @@ export default defineConfig({
 		port: 4173
 	},
 	testDir: 'e2e',
-	reporter: 'trunk-reporter'
-	//reporter: [['list'], ['junit', { outputFile: 'junit.xml' }]]
+	reporter: [['trunk-reporter']]
+	//reporter: [['junit', { outputFile: 'junit.xml' }]]
 });

@@ -15,7 +15,7 @@ Confifure Playwright to use reporter:
 Add reportet to `playwright.config.ts`
 
 ```ts
-import { defineConfig } from '@playwright/test';
+import { defineConfig } from '@playwright/tests';
 
 export default defineConfig({
 	webServer: {
@@ -29,5 +29,5 @@ export default defineConfig({
 
 **CLI**
 ```bash
-playwright test --reporter="trunk-reporter"
+playwright tests --reporter="trunk-reporter"
 ```

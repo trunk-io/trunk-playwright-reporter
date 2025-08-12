@@ -3,7 +3,7 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "test:e2e": "echo Hi"
+    "target-tests": "cd tests/target && npx playwright test"
   },
   "devDependencies": {
     "@types/bun": "latest"
