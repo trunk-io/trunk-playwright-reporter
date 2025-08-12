@@ -21,7 +21,7 @@ npm install @trunkio/trunk-reporter
 Update `playwright.config.ts`:
 
 ```ts
-import { defineConfig } from '@playwright/tests';
+import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
 	webServer: {
@@ -35,7 +35,7 @@ export default defineConfig({
 
 **Or using the CLI**
 ```bash
-playwright tests --reporter="trunk-reporter"
+playwright test --reporter="trunk-reporter"
 ```
 
 ## Feedback

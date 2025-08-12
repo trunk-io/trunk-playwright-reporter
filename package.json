@@ -1,9 +1,9 @@
 {
   "name": "trunk-reporter",
-  "module": "index.ts",
+  "module": "src/index.ts",
   "type": "module",
   "scripts": {
-    "target-tests": "cd tests/target && npx playwright test"
+    "target-tests": "cd test/target && npx playwright test"
   },
   "devDependencies": {
     "@types/bun": "latest"
@@ -13,7 +13,6 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "fast-xml-parser": "^5.2.5",
     "junit-report-builder": "^5.1.1"
   }
 }

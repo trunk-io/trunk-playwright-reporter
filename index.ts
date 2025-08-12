@@ -29,17 +29,16 @@ export default class TrunkReporter implements Reporter {
     }
 
     onTestEnd(test: TestCase, result: TestResult) {
-        const filename = test.location.file.substring(test.location.file.lastIndexOf('/') + 1);
         this.testSuite
             .testCase()
             .name(test.title)
             .time(result.duration)
             .file(test.location.file)
-            .className(test.parent.title || filename);
+            .className(test.parent.title);
     }
 
     onEnd(result: FullResult) {
-        builder.writeTo('report.xml');
         this.testSuite.time(result.duration);
+        builder.writeTo('report.xml');
     }
 }
