@@ -21,8 +21,6 @@ export default class TrunkReporter implements Reporter {
                 this.testSuite.name(suite.title);
                 break;
         }
-
-        console.log(`Running ${suite.allTests().length} tests using ${config.workers} workers`);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -38,13 +36,10 @@ export default class TrunkReporter implements Reporter {
             .time(result.duration)
             .file(test.location.file)
             .className(test.parent.title || filename);
-
-        console.log(`\t${filename} > ${test.parent.title} > ${test.title}: ${result.status}`);
     }
 
     onEnd(result: FullResult) {
         builder.writeTo('report.xml');
         this.testSuite.time(result.duration);
-        console.log(`${result.status}`);
     }
 }
