@@ -1,15 +1,33 @@
-# trunk-reporter
+# Trunk Playwright Reporter
 
-To install dependencies:
+To use the Trunk Playwright custom reporter
 
-```bash
-bun install
-```
-
-To run:
+Add the package: 
 
 ```bash
-bun run index.ts
+bun add @trunkio/trunk-reporter
 ```
 
-This project was created using `bun init` in bun v1.2.14. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+Confifure Playwright to use reporter:
+
+**Config**
+
+Add reportet to `playwright.config.ts`
+
+```ts
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+	webServer: {
+		command: 'npm run build && npm run preview',
+		port: 4173
+	},
+	testDir: 'e2e',
+	reporter: ['trunk-reporter'] // 👈 specify the reporter here; no need to import
+});
+```
+
+**CLI**
+```bash
+playwright test --reporter="trunk-reporter"
+```
