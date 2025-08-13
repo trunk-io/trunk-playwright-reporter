@@ -31,7 +31,7 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - run: bun install && bun link
       - run: cd test/target && bun install
-      - run: run run-target-tests
+      - run: bun run-target-tests
 
   integration-tests:
     name: Integration testing
