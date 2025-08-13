@@ -16,6 +16,7 @@ test.describe('Demo test suite', () => {
 		await expect(page.locator('h2')).toBeVisible();
 	});
 
+    // Including this test causes `junit-report-builder` to render incorrect output
 	// test.skip('home page has expected p', async ({ page }) => {
 	// 		await page.goto('/');
 	// 		await expect(page.locator('p')).toBeVisible();
