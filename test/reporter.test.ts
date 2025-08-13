@@ -2,7 +2,7 @@ import {beforeAll, describe, expect, test} from "bun:test";
 import {$, file} from "bun";
 import {type X2jOptions, XMLParser} from "fast-xml-parser";
 
-describe("Trunk Reporter Output", () => {
+describe("`demo.test.ts` test report", () => {
     let parsedXml: string;
 
     beforeAll(async () => {
@@ -15,13 +15,13 @@ describe("Trunk Reporter Output", () => {
         parsedXml = parser.parse(content)
     })
 
-    test('Includes total test count', async () => {
+    test('Contains the correct number of tests', async () => {
         const totalTestCount = parsedXml["testsuites"]["@@tests"];
         expect(totalTestCount).toBe("4")
     })
 
 
-    test('Name matches', () => {
+    test('Test names match test titles', () => {
         const tests = parsedXml["testsuites"]["testsuite"]["testcase"];
         let testName = tests[0]["@@name"]
         expect(testName).toBe("home page has expected h1")
@@ -30,8 +30,17 @@ describe("Trunk Reporter Output", () => {
         expect(testName).toBe("home page has expected p")
     })
 
-    test("Passing tests match", () => {
+    test("Contains the correct number of expected failures", () => {
+        const failures = parsedXml["testsuites"]["@@failures"];
+        expect(failures).toBe("1")
+    })
 
+    test("Expected failure includes failure reason", () => {
+        const tests = parsedXml["testsuites"]["testsuite"]["testcase"];
+        let failure = tests[3]
+        expect(failure).toBeDefined()
+        expect(failure['failure']['@@message']).toContain("locator('h2')&#xA;Expected: visible&#xA;Received: <element(s) not found>")
+        console.log(JSON.stringify(parsedXml, null, 2))
     })
 
     //
