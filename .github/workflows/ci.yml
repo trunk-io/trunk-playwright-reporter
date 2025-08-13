@@ -27,7 +27,7 @@ jobs:
     runs-on: :ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun
+      - uses: oven-sh/setup-bun@v2
       - run: bun install && bun link
       - run: cd test/target && bun install
 
@@ -36,7 +36,7 @@ jobs:
     runs-on: :ubuntu-latest
     continue-on-error: true
     steps:
-      - uses: oven-sh/setup-bun
+      - uses: oven-sh/setup-bun@v2
       - run: bun run run-target-tests
 
   integration-tests:
