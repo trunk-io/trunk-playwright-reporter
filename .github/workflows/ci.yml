@@ -31,5 +31,6 @@ jobs:
       - run: bun install
       - run: bun link
       - run: cd test/target && bun install
+      - run: cd ..
       - run: bun run run-target-tests
       - run: bun run integration
