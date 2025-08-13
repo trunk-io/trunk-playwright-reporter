@@ -34,7 +34,12 @@ export default class TrunkReporter implements Reporter {
             .name(test.title)
             .time(result.duration)
             .file(test.location.file)
-            .className(test.parent.title);
+            .className(test.parent.title)
+
+        if (result.status === 'failed') {
+            this.testSuite.testCase().failure(result.error?.message)
+        }
+
     }
 
     onEnd(result: FullResult) {

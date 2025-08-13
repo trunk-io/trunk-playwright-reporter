@@ -10,4 +10,9 @@ test.describe('Demo test suite', () => {
 		await page.goto('/');
 		await expect(page.locator('p')).toBeVisible();
 	});
+
+	test('home page has expected h2', async ({ page }) => {
+		await page.goto('/');
+		await expect(page.locator('h2')).toBeVisible();
+	});
 });

@@ -3,10 +3,12 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "target-tests": "cd test/target && npx playwright test"
+    "run-target-tests": "cd test/target && bunx playwright test || true",
+    "integration": "bun test test/reporter.test.ts"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "fast-xml-parser": "^5.2.5"
   },
   "peerDependencies": {
     "@playwright/test": "^1.54.2",
