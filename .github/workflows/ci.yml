@@ -32,4 +32,5 @@ jobs:
       - run: bun install && bun link
       - run: cd test/target && bun install && npx playwright install
       - run: bun run-target-tests || true
-      - run: cd ../../ && bun run integration
+      - run: cd ../../ && ls -l
+      - run: bun run integration
