@@ -44,5 +44,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: oven-sh/setup-bun@v2
-      - run: bun run integration
+      - run: cd .. && bun run integration
 
