@@ -6,7 +6,7 @@ describe("`demo.test.ts` test report", () => {
     let parsedXml: string;
 
     beforeAll(async () => {
-        const content = await file(`target/report.xml`).text()
+        const content = await file(`test/target/report.xml`).text()
         const options: X2jOptions = {
             attributeNamePrefix: "@@",
             ignoreAttributes: false
