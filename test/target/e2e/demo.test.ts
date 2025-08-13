@@ -15,4 +15,9 @@ test.describe('Demo test suite', () => {
 		await page.goto('/');
 		await expect(page.locator('h2')).toBeVisible();
 	});
+
+	// test.skip('home page has expected p', async ({ page }) => {
+	// 		await page.goto('/');
+	// 		await expect(page.locator('p')).toBeVisible();
+	// });
 });

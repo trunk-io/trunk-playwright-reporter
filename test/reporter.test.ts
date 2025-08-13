@@ -15,12 +15,43 @@ describe("`demo.test.ts` test report", () => {
         parsedXml = parser.parse(content)
     })
 
-    test('Contains the correct number of tests', async () => {
-        const totalTestCount = parsedXml["testsuites"]["@@tests"];
-        expect(totalTestCount).toBe("3")
+    test('Test suite contains ISO 8601 timestamp', () => {
+        const timestamp = parsedXml["testsuites"]["testsuite"]["@@timestamp"];
+        expect(timestamp).toBeDefined()
+        expect(timestamp).not.toBeEmpty()
+        const dt = new Date(timestamp)
+        expect(dt.toString()).not.toBe("Invalid Date")
     })
 
-    test('Test names match test titles', () => {
+    test('Contains the correct number of tests', async () => {
+        const total = parsedXml["testsuites"]["@@tests"];
+        expect(total).toBe("3")
+    })
+
+
+    test('Contains the correct number of skipped tests', async () => {
+        const skips = parsedXml["testsuites"]["@@skipped"];
+        expect(skips).toBe("0")
+    })
+
+    test("Contains the correct number of expected failures", () => {
+        const failures = parsedXml["testsuites"]["@@failures"];
+        expect(failures).toBe("1")
+    })
+
+    test('Contains the correct number of errored tests', async () => {
+        const errors = parsedXml["testsuites"]["@@errors"];
+        expect(errors).toBe("0")
+    })
+
+    test("Test failure includes the reason", () => {
+        const tests = parsedXml["testsuites"]["testsuite"]["testcase"];
+        const failingTest = tests[2]
+        expect(failingTest.failure).toBeDefined()
+        expect(failingTest.failure['@@message']).toContain("locator('h2')&#xA;Expected: visible&#xA;Received: <element(s) not found>")
+    })
+
+    test('`name` attribute matches title argument passed to `test()`', () => {
         const tests = parsedXml["testsuites"]["testsuite"]["testcase"];
         let testName = tests[0]["@@name"]
         expect(testName).toBe("home page has expected h1")
@@ -29,40 +60,22 @@ describe("`demo.test.ts` test report", () => {
         expect(testName).toBe("home page has expected p")
     })
 
-    test("Contains the correct number of expected failures", () => {
-        const failures = parsedXml["testsuites"]["@@failures"];
-        expect(failures).toBe("1")
-    })
 
-    test("Expected failure includes failure reason", () => {
+    test('`classname` attribute matches title argument passed to `test.describe()`', () => {
         const tests = parsedXml["testsuites"]["testsuite"]["testcase"];
-        const failingTest = tests[2]
-        expect(failingTest.failure).toBeDefined()
-        expect(failingTest.failure['@@message']).toContain("locator('h2')&#xA;Expected: visible&#xA;Received: <element(s) not found>")
+        const testClassname = tests[0]["@@classname"]
+        expect(testClassname).toBe("Demo test suite")
     })
 
-    //
-    // test('Classname matches', () => {
-    //
-    // })
-    //
-    // test('Has filepath', () => {
-    //
-    // })
-    //
-    // test('Total test duration is set', () => {
-    //
-    // })
-    //
-    // test('Test durations for individual tests', () => {
-    //
-    // })
-    //
-    // test('Test durations for individual tests', () => {
-    //
-    // })
-    //
-    test('Timestamps adhere to ISO 8601 format', () => {
 
+    test.skip('`file` attribute is set to path of file containing the test', () => {
+
+    })
+
+    test('`time` attribute is set', () => {
+        const tests = parsedXml["testsuites"]["testsuite"]["testcase"];
+        const time = tests[0]["@@time"]
+        expect(time).toBeDefined()
+        expect(time).not.toBeEmpty()
     })
 })

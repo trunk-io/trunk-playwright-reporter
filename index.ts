@@ -33,16 +33,15 @@ export default class TrunkReporter implements Reporter {
             .testCase()
 
         switch (result.status) {
-            case 'passed':
-                break
             case "failed":
-                testCase.failure(result.error?.message)
-                break;
-            case 'skipped':
-                break
             case 'timedOut':
-                break
             case "interrupted":
+                testCase.failure(result.error?.message)
+                break
+            case 'skipped':
+                testCase.skipped()
+                break;
+            case 'passed':
                 break
         }
 
