@@ -22,25 +22,19 @@ on:
   workflow_dispatch:
 
 jobs:
-  install-deps:
-    name: Install dependencies
+  setup-test:
+    name: Setup test env
     runs-on: :ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - run: bun install && bun link
       - run: cd test/target && bun install
-
-  setup-test:
-    name: Setup tests
-    runs-on: :ubuntu-latest
-    continue-on-error: true
-    steps:
-      - uses: oven-sh/setup-bun@v2
-      - run: bun run run-target-tests
+      - bun: run run-target-tests
 
   integration-tests:
-    name: Integration Testing
+    name: Integration testing
     runs-on: ubuntu-latest
     steps:
       - uses: oven-sh/setup-bun@v2
