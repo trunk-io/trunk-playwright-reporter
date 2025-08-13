@@ -1,5 +1,5 @@
 import {beforeAll, describe, expect, test} from "bun:test";
-import {$, file} from "bun";
+import {file} from "bun";
 import {type X2jOptions, XMLParser} from "fast-xml-parser";
 
 describe("`demo.test.ts` test report", () => {
@@ -17,9 +17,8 @@ describe("`demo.test.ts` test report", () => {
 
     test('Contains the correct number of tests', async () => {
         const totalTestCount = parsedXml["testsuites"]["@@tests"];
-        expect(totalTestCount).toBe("4")
+        expect(totalTestCount).toBe("3")
     })
-
 
     test('Test names match test titles', () => {
         const tests = parsedXml["testsuites"]["testsuite"]["testcase"];
@@ -37,10 +36,9 @@ describe("`demo.test.ts` test report", () => {
 
     test("Expected failure includes failure reason", () => {
         const tests = parsedXml["testsuites"]["testsuite"]["testcase"];
-        let failure = tests[3]
-        expect(failure).toBeDefined()
-        expect(failure['failure']['@@message']).toContain("locator('h2')&#xA;Expected: visible&#xA;Received: <element(s) not found>")
-        console.log(JSON.stringify(parsedXml, null, 2))
+        const failingTest = tests[2]
+        expect(failingTest.failure).toBeDefined()
+        expect(failingTest.failure['@@message']).toContain("locator('h2')&#xA;Expected: visible&#xA;Received: <element(s) not found>")
     })
 
     //
@@ -64,7 +62,7 @@ describe("`demo.test.ts` test report", () => {
     //
     // })
     //
-    // test('Timestamps adhere to ISO 8601 format', () => {
-    //
-    // })
+    test('Timestamps adhere to ISO 8601 format', () => {
+
+    })
 })

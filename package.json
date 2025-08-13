@@ -3,7 +3,7 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "run-target-tests": "cd test/target && bunx playwright test || true",
+    "run-target-tests": "cd test/target && bunx playwright test",
     "integration": "bun test test/reporter.test.ts"
   },
   "devDependencies": {
