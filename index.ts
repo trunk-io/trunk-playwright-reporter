@@ -29,17 +29,28 @@ export default class TrunkReporter implements Reporter {
     }
 
     onTestEnd(test: TestCase, result: TestResult) {
-        this.testSuite
+        const testCase = this.testSuite
             .testCase()
+
+        switch (result.status) {
+            case 'passed':
+                break
+            case "failed":
+                testCase.failure(result.error?.message)
+                break;
+            case 'skipped':
+                break
+            case 'timedOut':
+                break
+            case "interrupted":
+                break
+        }
+
+        testCase
             .name(test.title)
             .time(result.duration)
             .file(test.location.file)
             .className(test.parent.title)
-
-        if (result.status === 'failed') {
-            this.testSuite.testCase().failure(result.error?.message)
-        }
-
     }
 
     onEnd(result: FullResult) {
