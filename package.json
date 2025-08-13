@@ -1,5 +1,6 @@
 {
   "name": "trunk-reporter",
+  "version": "1.0.0_alpha",
   "module": "index.ts",
   "type": "module",
   "scripts": {
@@ -16,5 +17,9 @@
   },
   "dependencies": {
     "junit-report-builder": "^5.1.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "alpha"
   }
 }
