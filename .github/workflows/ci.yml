@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - run: bun install && bun link
-      - run: cd test/target && bun install && npx playwright install
+      - run: cd test/target && bun install && npx playwright install-deps
       - run: bun run-target-tests || true
       - run: cd ../../
       - run: bun run integration
