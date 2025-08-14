@@ -1,5 +1,5 @@
 import {beforeAll, describe, expect, test} from "bun:test";
-import {file} from "bun";
+import {$, file} from "bun";
 import {type X2jOptions, XMLParser} from "fast-xml-parser";
 
 describe("`demo.test.ts` test report", () => {
@@ -15,19 +15,10 @@ describe("`demo.test.ts` test report", () => {
         parsedXml = parser.parse(content)
     })
 
-    test('Test suite contains ISO 8601 timestamp', () => {
-        const timestamp = parsedXml["testsuites"]["testsuite"]["@@timestamp"];
-        expect(timestamp).toBeDefined()
-        expect(timestamp).not.toBeEmpty()
-        const dt = new Date(timestamp)
-        expect(dt.toString()).not.toBe("Invalid Date")
-    })
-
     test('Contains the correct number of tests', async () => {
         const total = parsedXml["testsuites"]["@@tests"];
         expect(total).toBe("3")
     })
-
 
     test('Contains the correct number of skipped tests', async () => {
         const skips = parsedXml["testsuites"]["@@skipped"];
@@ -60,16 +51,18 @@ describe("`demo.test.ts` test report", () => {
         expect(testName).toBe("home page has expected p")
     })
 
-
     test('`classname` attribute matches title argument passed to `test.describe()`', () => {
         const tests = parsedXml["testsuites"]["testsuite"]["testcase"];
         const testClassname = tests[0]["@@classname"]
-        expect(testClassname).toBe("Demo test suite")
+        expect(testClassname).toBe("Tests defined within`test.describe()`")
     })
 
-
-    test.skip('`file` attribute is set to path of file containing the test', () => {
-
+    test('`file` attribute is set to path of file containing the test', async () => {
+        const tests = parsedXml["testsuites"]["testsuite"]["testcase"];
+        let filename = tests[0]["@@file"]
+        const wd = await $`pwd`.text()
+        const cleanPath = wd.substring(0, wd.indexOf('\n'))
+        expect(filename).toBe(`${cleanPath}/test/target/e2e/demo.test.ts`)
     })
 
     test('`time` attribute is set', () => {
@@ -77,5 +70,13 @@ describe("`demo.test.ts` test report", () => {
         const time = tests[0]["@@time"]
         expect(time).toBeDefined()
         expect(time).not.toBeEmpty()
+    })
+
+    test('Test suite contains ISO 8601 timestamp', () => {
+        const timestamp = parsedXml["testsuites"]["testsuite"]["@@timestamp"];
+        expect(timestamp).toBeDefined()
+        expect(timestamp).not.toBeEmpty()
+        const dt = new Date(timestamp)
+        expect(dt.toString()).not.toBe("Invalid Date")
     })
 })
