@@ -28,4 +28,4 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: bun publish --dry-run
         env:
-           NODE_AUTH_TOKEN: ${{ secrets.NPM_CONFIG_TOKEN }}
+          NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
