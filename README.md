@@ -8,12 +8,11 @@
 
 # Trunk.io Playwright Reporter
 
-A custom [Playwright reporter](https://playwright.dev/docs/test-reporters#custom-reporters) that generates JUnit XML test reports for integration with [Trunk.io](https://trunk.io). This plugin serves as a replacement for Playwright's built-in JUnit reporter, providing enhanced functionality and better integration with Trunk's reporting system.
+This package exports a Playwright [custom reporter](https://playwright.dev/docs/test-reporters#custom-reporters) for integration with  [Trunk Flaky Tests](https://trunk.io/flaky-tests).
 
 ## Features
 
 - **Simple Integration** - Easy to add to any Playwright project
-- **JUnit XML Output** - Generates standardized test reports
 - **Trunk.io Optimized** - Designed specifically for Trunk.io workflows
 - **Lightweight** - Minimal overhead, focused functionality
 - **Reliable** - Handles various test scenarios and failure modes
@@ -70,11 +69,7 @@ export default defineConfig({
 
 ## Output
 
-The reporter generates JUnit XML files that can be:
-- Uploaded to Trunk.io for analysis
-- Integrated with CI/CD pipelines
-- Used with other JUnit-compatible tools
-- Processed by reporting systems
+The reporter generates JUnit XML files that can be uploaded to Trunk.io.
 
 ## Why Trunk Reporter?
 
