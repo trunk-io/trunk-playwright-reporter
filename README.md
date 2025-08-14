@@ -26,14 +26,6 @@ Install the package using your preferred package manager:
 npm install @trunkio/trunk-reporter
 ```
 
-```bash
-yarn add @trunkio/trunk-reporter
-```
-
-```bash
-bun add @trunkio/trunk-reporter
-```
-
 ## Configuration
 
 ### Option 1: Configuration File
