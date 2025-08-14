@@ -12,11 +12,11 @@ A custom [Playwright reporter](https://playwright.dev/docs/test-reporters#custom
 
 ## Features
 
-- 🚀 **Simple Integration** - Easy to add to any Playwright project
-- 📊 **JUnit XML Output** - Generates standardized test reports
-- 🔧 **Trunk.io Optimized** - Designed specifically for Trunk.io workflows
-- ⚡ **Lightweight** - Minimal overhead, focused functionality
-- 🎯 **Reliable** - Handles various test scenarios and failure modes
+- **Simple Integration** - Easy to add to any Playwright project
+- **JUnit XML Output** - Generates standardized test reports
+- **Trunk.io Optimized** - Designed specifically for Trunk.io workflows
+- **Lightweight** - Minimal overhead, focused functionality
+- **Reliable** - Handles various test scenarios and failure modes
 
 ## Installation
 
@@ -87,12 +87,6 @@ While Playwright includes a built-in JUnit reporter, the Trunk Reporter offers:
 ## Examples
 
 See the [test/target/](test/target/) directory for a complete example project that demonstrates how to use the Trunk Reporter in an existing Playwright testsuite.
-
-## Community & Support
-
-- 📚 **Documentation**: [Trunk.io Docs][docs]
-- 💬 **Slack**: [Join the Trunk Community][slack]
-- 🆘 **Issues**: [GitHub Issues](https://github.com/trunk-io/trunk-reporter/issues)
 
 ## Related Projects
 
