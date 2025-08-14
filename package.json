@@ -1,6 +1,6 @@
 {
   "name": "trunk-reporter",
-  "version": "1.0.0_alpha",
+  "version": "1.0.0-alpha",
   "module": "index.ts",
   "type": "module",
   "scripts": {
