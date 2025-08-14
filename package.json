@@ -1,6 +1,14 @@
 {
   "name": "trunk-reporter",
   "version": "1.0.0-alpha",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trunk-io/trunk-reporter.git"
+  },
+  "author": "Trunk.io",
+  "homepage": "https://trunk.io",
+  "bugs": "https://github.com/trunk-io/trunk-reporter/issues",
   "module": "index.ts",
   "type": "module",
   "scripts": {
