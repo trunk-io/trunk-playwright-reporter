@@ -8,39 +8,110 @@
 
 # Trunk.io Playwright Reporter
 
-This custom Playwright reporter generates the Junit XML test report used to upload to Trunk.io.
+A custom [Playwright reporter](https://playwright.dev/docs/test-reporters#custom-reporters) that generates JUnit XML test reports for integration with [Trunk.io](https://trunk.io). This plugin serves as a replacement for Playwright's built-in JUnit reporter, providing enhanced functionality and better integration with Trunk's reporting system.
 
-## Get Started
+## Features
 
-Install the package: 
+- 🚀 **Simple Integration** - Easy to add to any Playwright project
+- 📊 **JUnit XML Output** - Generates standardized test reports
+- 🔧 **Trunk.io Optimized** - Designed specifically for Trunk.io workflows
+- ⚡ **Lightweight** - Minimal overhead, focused functionality
+- 🎯 **Reliable** - Handles various test scenarios and failure modes
+
+## Installation
+
+Install the package using your preferred package manager:
 
 ```bash
 npm install @trunkio/trunk-reporter
 ```
 
-Update `playwright.config.ts`:
+```bash
+yarn add @trunkio/trunk-reporter
+```
+
+```bash
+bun add @trunkio/trunk-reporter
+```
+
+## Configuration
+
+### Option 1: Configuration File
+
+Update your `playwright.config.ts` to include the reporter:
 
 ```ts
 import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
-	webServer: {
-		command: 'npm run build && npm run preview',
-		port: 4173
-	},
-	testDir: 'e2e',
-	reporter: ['trunk-reporter'] // 👈 specify the reporter here; no need to import
+  reporter: [
+    ['list'], // Keep your preferred console reporter
+    ['trunk-reporter'] // Add the Trunk reporter
+  ],
+  // ... other config options
 });
 ```
 
-**Or using the CLI**
+### Option 2: Command Line
+
+Use the reporter directly from the command line:
+
 ```bash
-playwright test --reporter="trunk-reporter"
+npx playwright test --reporter="trunk-reporter"
 ```
 
-## Feedback
+### Option 3: Multiple Reporters
 
-Join the [Trunk Community Slack][slack]. ❤️
+Combine with other reporters for comprehensive output:
+
+```ts
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+  reporter: [
+    ['list'], // Console output
+    ['json', {  outputFile: 'test-results.json' }], // HTML report
+    ['trunk-reporter'] // Trunk JUnit XML report
+  ],
+});
+```
+
+## Output
+
+The reporter generates JUnit XML files that can be:
+- Uploaded to Trunk.io for analysis
+- Integrated with CI/CD pipelines
+- Used with other JUnit-compatible tools
+- Processed by reporting systems
+
+## Why Trunk Reporter?
+
+While Playwright includes a built-in JUnit reporter, the Trunk Reporter offers:
+
+- **Better Trunk.io Integration** - Optimized for Trunk's reporting requirements
+- **Simplified Configuration** - Easier setup and maintenance
+- **Focused Functionality** - Purpose-built for Trunk workflows
+
+## Examples
+
+See the [test/target/](test/target/) directory for a complete example project that demonstrates how to use the Trunk Reporter in an existing Playwright testsuite.
+
+## Community & Support
+
+- 📚 **Documentation**: [Trunk.io Docs][docs]
+- 💬 **Slack**: [Join the Trunk Community][slack]
+- 🆘 **Issues**: [GitHub Issues](https://github.com/trunk-io/trunk-reporter/issues)
+
+## Related Projects
+
+This reporter is part of the Trunk.io ecosystem. Check out other Trunk tools:
+
+- [Trunk Action](https://github.com/trunk-io/trunk-action) - GitHub Action for Trunk
+- [Trunk VS Code Extension](https://marketplace.visualstudio.com/items?itemName=Trunk.io) - VS Code integration
+
+---
+
+**Made with ❤️ by the Trunk.io team**
 
 [slack]: https://slack.trunk.io
 [docs]: https://docs.trunk.io
