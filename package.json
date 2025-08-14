@@ -7,7 +7,7 @@
   "homepage": "https://trunk.io",
   "bugs": "https://github.com/trunk-io/trunk-reporter/issues",
   "license": "MIT",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/trunk-io/trunk-reporter.git"
