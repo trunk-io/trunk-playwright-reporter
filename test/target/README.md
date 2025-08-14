@@ -43,7 +43,7 @@ This will:
 The test suite includes:
 - ✅ **Passing tests** - Verify basic functionality works
 - ❌ **Failing tests** - Demonstrate error handling and reporting
-- **Mixed results** - Show how the reporter handles various test outcomes
+- ⚠️ **Mixed results** - Show how the reporter handles various test outcomes
 
 ## Expected Output
 
