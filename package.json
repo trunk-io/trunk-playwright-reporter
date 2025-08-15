@@ -1,16 +1,16 @@
 {
-  "name": "trunk-reporter",
+  "name": "@trunkio/trunk-playwright-reporter",
   "description": "A custom reporter for Playwright.",
   "keywords": [
     "playwright"
   ],
   "homepage": "https://trunk.io",
-  "bugs": "https://github.com/trunk-io/trunk-reporter/issues",
+  "bugs": "https://github.com/ttrunk-io/trunk-playwright-reporter/issues",
   "license": "MIT",
   "version": "1.0.0-alpha.2",
   "repository": {
     "type": "git",
-    "url": "https://github.com/trunk-io/trunk-reporter.git"
+    "url": "https://github.com/trunk-io/trunk-playwright-reporter.git"
   },
   "author": "Trunk.io",
   "module": "index.ts",
