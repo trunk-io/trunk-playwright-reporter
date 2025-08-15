@@ -37,7 +37,7 @@ import { defineConfig } from '@playwright/test';
 export default defineConfig({
   reporter: [
     ['list'], // Keep your preferred console reporter
-    ['trunk-reporter'] // Add the Trunk reporter
+    ['trunk-reporter'] // 👈 Add the Trunk reporter
   ],
   // ... other config options
 });
@@ -51,31 +51,10 @@ Use the reporter directly from the command line:
 npx playwright test --reporter="trunk-reporter"
 ```
 
-### Option 3: Multiple Reporters
-
-Combine with other reporters for comprehensive output:
-
-```ts
-import { defineConfig } from '@playwright/test';
-
-export default defineConfig({
-  reporter: [
-    ['list'], // Console output
-    ['json', {  outputFile: 'test-results.json' }], // HTML report
-    ['trunk-reporter'] // Trunk JUnit XML report
-  ],
-});
-```
-
-## Output
-
-The reporter generates JUnit XML files that can be uploaded to Trunk.io.
-
 ## Why Trunk Reporter?
 
 While Playwright includes a built-in JUnit reporter, the Trunk Reporter offers:
-
-- **Better Trunk.io Integration** - Optimized for Trunk's reporting requirements
+- **Better Trunk.io Integration** - Optimized JUnit XML file output for Trunk's reporting requirements
 - **Simplified Configuration** - Easier setup and maintenance
 - **Focused Functionality** - Purpose-built for Trunk workflows
 
