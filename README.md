@@ -22,7 +22,7 @@ This package exports a Playwright [custom reporter](https://playwright.dev/docs/
 Install the package using your preferred package manager:
 
 ```bash
-npm install @trunkio/trunk-reporter
+npm install @trunkio/trunk-playwright-reporter
 ```
 
 ## Configuration
@@ -37,7 +37,7 @@ import { defineConfig } from '@playwright/test';
 export default defineConfig({
   reporter: [
     ['list'], // Keep your preferred console reporter
-    ['trunk-reporter'] // 👈 Add the Trunk reporter
+    ['@trunkio/trunk-playwright-reporter'] // 👈 Add the Trunk reporter
   ],
   // ... other config options
 });

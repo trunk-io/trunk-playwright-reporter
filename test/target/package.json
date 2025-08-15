@@ -37,6 +37,6 @@
 		"vite": "^7.0.4"
 	},
 	"dependencies": {
-		"trunk-reporter": "link:trunk-reporter"
+      "@trunkio/trunk-playwright-reporter": "link:@trunkio/trunk-playwright-reporter"
 	}
 }
