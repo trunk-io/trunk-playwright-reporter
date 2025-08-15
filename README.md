@@ -48,7 +48,7 @@ export default defineConfig({
 Use the reporter directly from the command line:
 
 ```bash
-npx playwright test --reporter="trunk-reporter"
+npx playwright test --reporter="@trunkio/trunk-playwright-reporter"
 ```
 
 ## Why Trunk Reporter?
