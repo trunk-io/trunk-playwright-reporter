@@ -56,7 +56,7 @@ npx playwright test --reporter="trunk-reporter"
 While Playwright includes a built-in JUnit reporter, the Trunk Reporter offers:
 - **Better Trunk.io Integration** - Trunk-optimized JUnit output
 - **Simplified Configuration** - Easier setup and maintenance
-- **Focused Functionality** - Purpose-built for [Trunk Flaky Tests])(https://trunk.io/flaky-tests)
+- **Focused Functionality** - Purpose-built for [Trunk Flaky Tests](https://trunk.io/flaky-tests)
 
 ## Examples
 
