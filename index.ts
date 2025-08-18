@@ -1,5 +1,5 @@
 import { build } from 'bun';
-import { copyFile, mkdir } from 'node:fs/promises';
+import { copyFile, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 
 async function buildReporter() {
@@ -26,7 +26,22 @@ async function buildReporter() {
     // Copy necessary files for publishing
     console.log('📁 Copying files for publishing...');
     try {
-      await copyFile('./package.json', './dist/package.json');
+      // Copy package.json and modify paths for dist folder
+      const packageJson = JSON.parse(await readFile('./package.json', 'utf-8'));
+      packageJson.module = './reporter.js';
+      packageJson.main = './reporter.js';
+      packageJson.exports = {
+        ".": {
+          "import": "./reporter.js",
+          "require": "./reporter.js"
+        }
+      };
+      // Remove build script since it's not needed in published package
+      delete packageJson.scripts;
+      delete packageJson.devDependencies;
+      
+      await writeFile('./dist/package.json', JSON.stringify(packageJson, null, 2));
+      
       await copyFile('./SECURITY.md', './dist/SECURITY.md');
       await copyFile('./README.md', './dist/README.md');
       await copyFile('./LICENSE', './dist/LICENSE');

@@ -11,6 +11,8 @@ import builder from 'junit-report-builder';
 
 export class TrunkReporter implements Reporter {
     private testSuite = builder.testSuite();
+    private hasFailures = false;
+    private testCases = new Map<string, any>(); // Store test cases by test ID
 
     onBegin(config: FullConfig, suite: Suite) {
         switch (suite.type) {
@@ -23,19 +25,24 @@ export class TrunkReporter implements Reporter {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onTestBegin(_test: TestCase, _result: TestResult) {
-        this.testSuite.timestamp(new Date(Date.now()).toISOString());
+    onTestBegin(test: TestCase, _result: TestResult) {
+        // Create test case and store start time
+        const testCase = this.testSuite.testCase();
+        
+        // Store the test case for later completion
+        this.testCases.set(test.id, testCase);
     }
 
     onTestEnd(test: TestCase, result: TestResult) {
-        const testCase = this.testSuite
-            .testCase()
+        // Get the test case we created earlier
+        const testCase = this.testCases.get(test.id);
+        if (!testCase) return;
 
         switch (result.status) {
             case "failed":
             case 'timedOut':
             case "interrupted":
+                this.hasFailures = true;
                 testCase.failure(result.error?.message)
                 break
             case 'skipped':
@@ -49,12 +56,29 @@ export class TrunkReporter implements Reporter {
             .name(test.title)
             .time(result.duration)
             .file(test.location.file)
-            .className(test.parent.title)
+            .className(test.parent.title);
+            
+        // Clean up the stored test case
+        this.testCases.delete(test.id);
     }
 
     onEnd(result: FullResult) {
         this.testSuite.time(result.duration);
         builder.writeTo('report.xml');
+        
+        // Check if we have any test failures and exit accordingly
+        if (this.hasFailures) {
+            // Use setTimeout to ensure the report is written before exiting
+            setTimeout(() => {
+                process.exit(1);
+            }, 100);
+        }
+    }
+
+    onExit(): Promise<void> {
+        // This method might not be called in all Playwright versions
+        // We handle exit codes in onEnd instead
+        return Promise.resolve();
     }
 }
 
