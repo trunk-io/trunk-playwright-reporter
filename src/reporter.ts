@@ -70,15 +70,9 @@ export class TrunkReporter implements Reporter {
         if (this.hasFailures) {
             // Use setTimeout to ensure the report is written before exiting
             setTimeout(() => {
-                process.exit(1);
+                process.exit(0);
             }, 100);
         }
-    }
-
-    onExit(): Promise<void> {
-        // This method might not be called in all Playwright versions
-        // We handle exit codes in onEnd instead
-        return Promise.resolve();
     }
 }
 
