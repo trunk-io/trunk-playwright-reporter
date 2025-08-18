@@ -15,9 +15,17 @@
     "url": "https://github.com/trunk-io/trunk-playwright-reporter.git"
   },
   "author": "Trunk.io",
-  "module": "index.ts",
+  "module": "dist/reporter.js",
+  "main": "dist/reporter.js",
+  "exports": {
+    ".": {
+      "import": "./dist/reporter.js",
+      "require": "./dist/reporter.js"
+    }
+  },
   "type": "module",
   "scripts": {
+    "build": "bun run index.ts",
     "run-target-tests": "cd test/target && bunx playwright test",
     "integration": "bun test test/reporter.test.ts"
   },
