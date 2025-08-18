@@ -1,59 +1,45 @@
-// noinspection JSUnusedGlobalSymbols
-import type {
-    FullConfig,
-    FullResult,
-    Reporter,
-    Suite,
-    TestCase,
-    TestResult
-} from '@playwright/test/reporter';
-import builder from 'junit-report-builder';
+import { build } from 'bun';
+import { copyFile, mkdir } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 
-export default class TrunkReporter implements Reporter {
-    private testSuite = builder.testSuite();
+async function buildReporter() {
+  console.log('Building trunk-playwright-reporter...');
+  
+  // Ensure dist directory exists
+  if (!existsSync('./dist')) {
+    await mkdir('./dist', { recursive: true });
+  }
+  
+  const result = await build({
+    entrypoints: ['./src/reporter.ts'],
+    outdir: './dist',
+    target: 'node',
+    format: 'esm',
+    minify: false,
+    sourcemap: 'external',
+  });
 
-    onBegin(config: FullConfig, suite: Suite) {
-        switch (suite.type) {
-            case 'root':
-                this.testSuite.name('playwright tests').timestamp(new Date(Date.now()));
-                break;
-            case 'describe':
-                this.testSuite.name(suite.title);
-                break;
-        }
+  if (result.success) {
+    console.log('✅ Build successful!');
+    console.log('Output files:', result.outputs.map(output => output.path));
+    
+    // Copy necessary files for publishing
+    console.log('📁 Copying files for publishing...');
+    try {
+      await copyFile('./package.json', './dist/package.json');
+      await copyFile('./SECURITY.md', './dist/SECURITY.md');
+      await copyFile('./README.md', './dist/README.md');
+      await copyFile('./LICENSE', './dist/LICENSE');
+      console.log('✅ Files copied successfully!');
+    } catch (error) {
+      console.error('❌ Error copying files:', error);
+      process.exit(1);
     }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onTestBegin(_test: TestCase, _result: TestResult) {
-        this.testSuite.timestamp(new Date(Date.now()).toISOString());
-    }
-
-    onTestEnd(test: TestCase, result: TestResult) {
-        const testCase = this.testSuite
-            .testCase()
-
-        switch (result.status) {
-            case "failed":
-            case 'timedOut':
-            case "interrupted":
-                testCase.failure(result.error?.message)
-                break
-            case 'skipped':
-                testCase.skipped()
-                break;
-            case 'passed':
-                break
-        }
-
-        testCase
-            .name(test.title)
-            .time(result.duration)
-            .file(test.location.file)
-            .className(test.parent.title)
-    }
-
-    onEnd(result: FullResult) {
-        this.testSuite.time(result.duration);
-        builder.writeTo('report.xml');
-    }
+  } else {
+    console.error('❌ Build failed!');
+    console.error('Logs:', result.logs);
+    process.exit(1);
+  }
 }
+
+buildReporter().catch(console.error);
