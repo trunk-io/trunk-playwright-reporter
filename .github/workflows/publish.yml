@@ -24,7 +24,6 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: bun install --frozen-lockfile
       - run: bun run build
-      - run: cd dist
-      - run: bun publish --dry-run
+      - run: cd dist && bun publish --dry-run
         env:
           NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
