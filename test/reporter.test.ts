@@ -62,7 +62,7 @@ describe("Reporter Junit Output", () => {
 
     test('Contains the correct number of tests', async () => {
         const total = parsedXml["testsuites"]["@@tests"];
-        expect(total).toBe("11")
+        expect(total).toBe("12")
     })
 
     test('Contains the correct number of skipped tests', async () => {
@@ -81,48 +81,131 @@ describe("Reporter Junit Output", () => {
     })
 
     test("Test failure includes the reason", () => {
-        const tests = parsedXml["testsuites"]["testsuite"]["testcase"] as any[];
-        const failingTest = tests[2]
-        expect(failingTest.failure).toBeDefined()
+        // Find the specific failing test we're looking for
+        const testSuites = parsedXml["testsuites"]["testsuite"] as any[];
+        let failingTest = null;
+        
+        for (const suite of testSuites) {
+            if (suite.testcase) {
+                const testCases = Array.isArray(suite.testcase) ? suite.testcase : [suite.testcase];
+                failingTest = testCases.find((test: any) => 
+                    test["@@name"] === "home page has expected h2 (failure intended)"
+                );
+                if (failingTest) break;
+            }
+        }
+        
+        expect(failingTest).toBeDefined();
+        expect(failingTest.failure).toBeDefined();
         expect(failingTest.failure['@@message']).toContain("locator('h2')&#xA;Expected: visible&#xA;Received: <element(s) not found>")
     })
 
     test('`name` attribute matches title argument passed to `test()`', () => {
-        const tests = parsedXml["testsuites"]["testsuite"]["testcase"] as any[];
-        let testName = tests[0]["@@name"]
+        // Find specific tests by name across all test suites
+        const testSuites = parsedXml["testsuites"]["testsuite"] as any[];
+        let testName = null;
+        
+        // Find the "home page has expected h1" test
+        for (const suite of testSuites) {
+            if (suite.testcase) {
+                const testCases = Array.isArray(suite.testcase) ? suite.testcase : [suite.testcase];
+                const test = testCases.find((t: any) => t["@@name"] === "home page has expected h1");
+                if (test) {
+                    testName = test["@@name"];
+                    break;
+                }
+            }
+        }
         expect(testName).toBe("home page has expected h1")
 
-        testName = tests[1]["@@name"]
+        // Find the "home page has expected p" test
+        for (const suite of testSuites) {
+            if (suite.testcase) {
+                const testCases = Array.isArray(suite.testcase) ? suite.testcase : [suite.testcase];
+                const test = testCases.find((t: any) => t["@@name"] === "home page has expected p");
+                if (test) {
+                    testName = test["@@name"];
+                    break;
+                }
+            }
+        }
         expect(testName).toBe("home page has expected p")
     })
 
     test('`classname` attribute matches title argument passed to `test.describe()`', () => {
-        const tests = parsedXml["testsuites"]["testsuite"]["testcase"] as any[];
-        const testClassname = tests[0]["@@classname"]
-        expect(testClassname).toBe("Tests defined within`test.describe()`")
+        // Find the specific test to check its classname
+        const testSuites = parsedXml["testsuites"]["testsuite"] as any[];
+        let testClassname = null;
+        
+        for (const suite of testSuites) {
+            if (suite.testcase) {
+                const testCases = Array.isArray(suite.testcase) ? suite.testcase : [suite.testcase];
+                const test = testCases.find((t: any) => t["@@name"] === "home page has expected h1");
+                if (test) {
+                    testClassname = test["@@classname"];
+                    break;
+                }
+            }
+        }
+        expect(testClassname).toBe("Basic Functionality Tests")
     })
 
     test('`file` attribute is set to path of file containing the test', async () => {
-        const tests = parsedXml["testsuites"]["testsuite"]["testcase"] as any[];
-        let filename = tests[0]["@@file"]
+        // Find the specific test to check its file path
+        const testSuites = parsedXml["testsuites"]["testsuite"] as any[];
+        let filename = null;
+        
+        for (const suite of testSuites) {
+            if (suite.testcase) {
+                const testCases = Array.isArray(suite.testcase) ? suite.testcase : [suite.testcase];
+                const test = testCases.find((t: any) => t["@@name"] === "home page has expected h1");
+                if (test) {
+                    filename = test["@@file"];
+                    break;
+                }
+            }
+        }
         const wd = await $`pwd`.text()
         const cleanPath = wd.substring(0, wd.indexOf('\n'))
-        expect(filename).toBe(`${cleanPath}/test/target/e2e/demo.test.ts`)
+        expect(filename).toBe(`${cleanPath}/test/target/e2e/basic-functionality.test.ts`)
     })
 
     test('`time` attribute is set', () => {
-        const tests = parsedXml["testsuites"]["testsuite"]["testcase"] as any[];
-        const time = tests[0]["@@time"]
+        // Find the first test across all test suites
+        const testSuites = parsedXml["testsuites"]["testsuite"] as any[];
+        let time = null;
+        
+        for (const suite of testSuites) {
+            if (suite.testcase) {
+                const testCases = Array.isArray(suite.testcase) ? suite.testcase : [suite.testcase];
+                if (testCases.length > 0) {
+                    time = testCases[0]["@@time"];
+                    break;
+                }
+            }
+        }
         expect(time).toBeDefined()
         expect(time).not.toBeEmpty()
     })
 
     test('Test suite contains ISO 8601 timestamp', () => {
-        const timestamp = parsedXml["testsuites"]["testsuite"]["@@timestamp"];
-        expect(timestamp).toBeDefined()
-        expect(timestamp).not.toBeEmpty()
-        const dt = new Date(timestamp)
-        expect(dt.toString()).not.toBe("Invalid Date")
+        // Check that at least one test suite has a timestamp
+        const testSuites = parsedXml["testsuites"]["testsuite"] as any[];
+        let hasTimestamp = false;
+        
+        for (const suite of testSuites) {
+            if (suite["@@timestamp"]) {
+                hasTimestamp = true;
+                const timestamp = suite["@@timestamp"];
+                expect(timestamp).toBeDefined()
+                expect(timestamp).not.toBeEmpty()
+                const dt = new Date(timestamp)
+                expect(dt.toString()).not.toBe("Invalid Date")
+                break;
+            }
+        }
+        
+        expect(hasTimestamp).toBe(true)
     })
 })
 
