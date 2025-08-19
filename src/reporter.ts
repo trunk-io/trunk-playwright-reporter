@@ -28,7 +28,7 @@ export class TrunkReporter implements Reporter {
     onTestBegin(test: TestCase, _result: TestResult) {
         // Create test case and store start time
         const testCase = this.testSuite.testCase();
-        
+
         // Store the test case for later completion
         this.testCases.set(test.id, testCase);
     }
@@ -53,10 +53,10 @@ export class TrunkReporter implements Reporter {
         }
 
         testCase
-            .name(test.title)
+            .name(test.title || 'Unknown Test')
             .time(result.duration)
-            .file(test.location.file)
-            .className(test.parent.title);
+            .file(test.location?.file || 'unknown-file')
+            .className(test.parent?.title || 'Unknown Suite');
             
         // Clean up the stored test case
         this.testCases.delete(test.id);
@@ -64,14 +64,12 @@ export class TrunkReporter implements Reporter {
 
     onEnd(result: FullResult) {
         this.testSuite.time(result.duration);
-        builder.writeTo('report.xml');
-        
-        // Check if we have any test failures and exit accordingly
+        builder.writeTo(process.env.PLAYWRIGHT_JUNIT_OUTPUT_FILE as string || 'junit.xml');
         if (this.hasFailures) {
             // Use setTimeout to ensure the report is written before exiting
             setTimeout(() => {
                 process.exit(0);
-            }, 100);
+            }, 500);
         }
     }
 }
