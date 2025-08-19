@@ -12,21 +12,16 @@ import builder from 'junit-report-builder';
 export class TrunkReporter implements Reporter {
     private testSuite = builder.testSuite();
     private hasFailures = false;
-    private testCases = new Map<string, TestCase>();
 
     onBegin(config: FullConfig, suite: Suite) {
         this.testSuite.timestamp(new Date().toISOString());
     }
 
     onTestBegin(test: TestCase, _result: TestResult) {
-        this.testCases.set(test.id, test);
         this.testSuite.name(test.parent?.title || 'playwright tests')
     }
 
     onTestEnd(test: TestCase, result: TestResult) {
-        const testCase = this.testCases.get(test.id);
-        if (!testCase) return;
-
         const junit = this.testSuite.testCase()
             .name(test.title || 'Unknown Test')
             .time(result.duration)
@@ -52,20 +47,17 @@ export class TrunkReporter implements Reporter {
             case 'passed':
                 break
         }
-
-        this.testCases.delete(test.id);
     }
 
     onEnd(result: FullResult) {
         this.testSuite.time(result.duration);
         builder.writeTo(process.env.PLAYWRIGHT_JUNIT_OUTPUT_FILE as string || 'junit.xml');
-        if (this.hasFailures) {
-            // Use setTimeout to ensure the report is written before exiting
-            setTimeout(() => {
-                process.exit(0);
-            }, 500);
-        }
-    }
+        
+        // Use setTimeout to ensure the report is written before exiting
+        setTimeout(() => {
+            process.exit(this.hasFailures ? 1 : 0);
+        }, 500);
+}
 }
 
 export default TrunkReporter;
