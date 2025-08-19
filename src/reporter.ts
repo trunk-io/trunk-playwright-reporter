@@ -21,10 +21,9 @@ export class TrunkReporter implements Reporter {
 
     private getOrCreateTestSuite(filePath: string, suiteName: string) {
         if (!this.testSuites.has(filePath)) {
-            // Extract just the filename from the path for better readability
-            const fileName = filePath.split('/').pop() || filePath;
+            // Use the suite name (describe block text) as the testsuite name
             const testSuite = builder.testSuite()
-                .name(fileName)
+                .name(suiteName)
                 .timestamp(new Date().toISOString());
             this.testSuites.set(filePath, testSuite);
         }
@@ -43,11 +42,14 @@ export class TrunkReporter implements Reporter {
         // Get or create the test suite for this file
         const testSuite = this.getOrCreateTestSuite(filePath, suiteName);
         
+        // Extract just the filename from the path for the classname
+        const fileName = filePath.split('/').pop() || filePath;
+        
         const junit = testSuite.testCase()
             .name(test.title || 'Unknown Test')
             .time(result.duration)
             .file(filePath)
-            .className(suiteName);
+            .className(fileName);
 
         switch (result.status) {
             case "failed":

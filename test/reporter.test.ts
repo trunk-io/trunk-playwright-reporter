@@ -147,7 +147,7 @@ describe("Reporter Junit Output", () => {
                 }
             }
         }
-        expect(testClassname).toBe("Basic Functionality Tests")
+        expect(testClassname).toBe("basic-functionality.test.ts")
     })
 
     test('`file` attribute is set to path of file containing the test', async () => {
