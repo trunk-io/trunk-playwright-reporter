@@ -62,17 +62,17 @@ describe("Reporter Junit Output", () => {
 
     test('Contains the correct number of tests', async () => {
         const total = parsedXml["testsuites"]["@@tests"];
-        expect(total).toBe("3")
+        expect(total).toBe("11")
     })
 
     test('Contains the correct number of skipped tests', async () => {
         const skips = parsedXml["testsuites"]["@@skipped"];
-        expect(skips).toBe("0")
+        expect(skips).toBe("1")
     })
 
     test("Contains the correct number of expected failures", () => {
         const failures = parsedXml["testsuites"]["@@failures"];
-        expect(failures).toBe("1")
+        expect(failures).toBe("5")
     })
 
     test('Contains the correct number of errored tests', async () => {
@@ -131,6 +131,357 @@ describe('Reporter Resilience Tests', () => {
 
     beforeEach(() => {
         reporter = new TrunkReporter();
+    });
+
+    describe('Interrupt Tests', () => {
+        test('handles interrupted tests with custom error message', () => {
+            const mockTest = createMockTestCase('interrupted-test', 'Interrupted Test');
+            const mockResult = {
+                ...createMockTestResult('interrupted'),
+                error: new Error('User interrupted the test execution')
+            } as unknown as TestResult;
+
+            expect(() => {
+                reporter.onTestBegin(mockTest, mockResult);
+                reporter.onTestEnd(mockTest, mockResult);
+            }).not.toThrow();
+        });
+
+        test('handles interrupted tests with stack trace', () => {
+            const mockTest = createMockTestCase('interrupted-stack-test', 'Interrupted Stack Test');
+            const error = new Error('Test was interrupted');
+            error.stack = 'Error: Test was interrupted\n    at Test.run (/path/to/test.js:10:15)';
+            
+            const mockResult = {
+                ...createMockTestResult('interrupted'),
+                error
+            } as unknown as TestResult;
+
+            expect(() => {
+                reporter.onTestBegin(mockTest, mockResult);
+                reporter.onTestEnd(mockTest, mockResult);
+            }).not.toThrow();
+        });
+
+        test('handles interrupted tests with undefined error', () => {
+            const mockTest = createMockTestCase('interrupted-no-error', 'Interrupted No Error Test');
+            const mockResult = {
+                ...createMockTestResult('interrupted'),
+                error: undefined
+            } as unknown as TestResult;
+
+            expect(() => {
+                reporter.onTestBegin(mockTest, mockResult);
+                reporter.onTestEnd(mockTest, mockResult);
+            }).not.toThrow();
+        });
+
+        test('interrupted tests set hasFailures flag', () => {
+            const mockTest = createMockTestCase('interrupted-flag-test', 'Interrupted Flag Test');
+            const mockResult = createMockTestResult('interrupted');
+
+            reporter.onTestBegin(mockTest, mockResult);
+            reporter.onTestEnd(mockTest, mockResult);
+
+            // Access private property for testing
+            const hasFailures = (reporter as any).hasFailures;
+            expect(hasFailures).toBe(true);
+        });
+    });
+
+    describe('Skip Tests', () => {
+        test('handles skipped tests with custom reason', () => {
+            const mockTest = createMockTestCase('skipped-test', 'Skipped Test');
+            const mockResult = createMockTestResult('skipped');
+
+            expect(() => {
+                reporter.onTestBegin(mockTest, mockResult);
+                reporter.onTestEnd(mockTest, mockResult);
+            }).not.toThrow();
+        });
+
+        test('handles skipped tests with annotations', () => {
+            const mockTest = {
+                ...createMockTestCase('skipped-annotation-test', 'Skipped Annotation Test'),
+                annotations: [{type: 'skip', description: 'Test is flaky in CI'}]
+            } as unknown as TestCase;
+            const mockResult = createMockTestResult('skipped');
+
+            expect(() => {
+                reporter.onTestBegin(mockTest, mockResult);
+                reporter.onTestEnd(mockTest, mockResult);
+            }).not.toThrow();
+        });
+
+        test('skipped tests do not set hasFailures flag', () => {
+            const mockTest = createMockTestCase('skipped-flag-test', 'Skipped Flag Test');
+            const mockResult = createMockTestResult('skipped');
+
+            reporter.onTestBegin(mockTest, mockResult);
+            reporter.onTestEnd(mockTest, mockResult);
+
+            // Access private property for testing
+            const hasFailures = (reporter as any).hasFailures;
+            expect(hasFailures).toBe(false);
+        });
+
+        test('handles multiple skipped tests in sequence', () => {
+            const tests = [
+                {id: 'skip-1', title: 'First Skipped Test'},
+                {id: 'skip-2', title: 'Second Skipped Test'},
+                {id: 'skip-3', title: 'Third Skipped Test'}
+            ];
+
+            tests.forEach(({id, title}) => {
+                const mockTest = createMockTestCase(id, title);
+                const mockResult = createMockTestResult('skipped');
+
+                expect(() => {
+                    reporter.onTestBegin(mockTest, mockResult);
+                    reporter.onTestEnd(mockTest, mockResult);
+                }).not.toThrow();
+            });
+        });
+    });
+
+    describe('Failure Reason Tests', () => {
+        test('handles failure with detailed error message', () => {
+            const mockTest = createMockTestCase('detailed-failure', 'Detailed Failure Test');
+            const detailedError = new Error('Assertion failed: Expected element to be visible but it was hidden');
+            detailedError.stack = 'Error: Assertion failed\n    at expect.toBeVisible (/path/to/test.js:25:10)';
+            
+            const mockResult = {
+                ...createMockTestResult('failed'),
+                error: detailedError
+            } as unknown as TestResult;
+
+            expect(() => {
+                reporter.onTestBegin(mockTest, mockResult);
+                reporter.onTestEnd(mockTest, mockResult);
+            }).not.toThrow();
+        });
+
+        test('handles failure with custom error type', () => {
+            const mockTest = createMockTestCase('custom-error-failure', 'Custom Error Failure Test');
+            const customError = new Error('Custom assertion error');
+            (customError as any).type = 'AssertionError';
+            
+            const mockResult = {
+                ...createMockTestResult('failed'),
+                error: customError
+            } as unknown as TestResult;
+
+            expect(() => {
+                reporter.onTestBegin(mockTest, mockResult);
+                reporter.onTestEnd(mockTest, mockResult);
+            }).not.toThrow();
+        });
+
+        test('handles failure with multiline error message', () => {
+            const mockTest = createMockTestCase('multiline-failure', 'Multiline Failure Test');
+            const multilineError = new Error('Multiple lines\nof error\ninformation');
+            
+            const mockResult = {
+                ...createMockTestResult('failed'),
+                error: multilineError
+            } as unknown as TestResult;
+
+            expect(() => {
+                reporter.onTestBegin(mockTest, mockResult);
+                reporter.onTestEnd(mockTest, mockResult);
+            }).not.toThrow();
+        });
+
+        test('handles failure with special characters in error message', () => {
+            const mockTest = createMockTestCase('special-chars-failure', 'Special Chars Failure Test');
+            const specialCharsError = new Error('Error with special chars: !@#$%^&*()_+-=[]{}|;:,.<>?');
+            
+            const mockResult = {
+                ...createMockTestResult('failed'),
+                error: specialCharsError
+            } as unknown as TestResult;
+
+            expect(() => {
+                reporter.onTestBegin(mockTest, mockResult);
+                reporter.onTestEnd(mockTest, mockResult);
+            }).not.toThrow();
+        });
+
+        test('handles failure with unicode characters in error message', () => {
+            const mockTest = createMockTestCase('unicode-failure', 'Unicode Failure Test');
+            const unicodeError = new Error('Error with unicode: 🚀🌟🎉中文日本語한국어');
+            
+            const mockResult = {
+                ...createMockTestResult('failed'),
+                error: unicodeError
+            } as unknown as TestResult;
+
+            expect(() => {
+                reporter.onTestBegin(mockTest, mockResult);
+                reporter.onTestEnd(mockTest, mockResult);
+            }).not.toThrow();
+        });
+
+        test('handles failure with very long error message', () => {
+            const mockTest = createMockTestCase('long-error-failure', 'Long Error Failure Test');
+            const longError = new Error('A'.repeat(10000)); // Very long error message
+            
+            const mockResult = {
+                ...createMockTestResult('failed'),
+                error: longError
+            } as unknown as TestResult;
+
+            expect(() => {
+                reporter.onTestBegin(mockTest, mockResult);
+                reporter.onTestEnd(mockTest, mockResult);
+            }).not.toThrow();
+        });
+
+        test('handles failure with undefined error message', () => {
+            const mockTest = createMockTestCase('undefined-error-failure', 'Undefined Error Failure Test');
+            const mockResult = {
+                ...createMockTestResult('failed'),
+                error: undefined
+            } as unknown as TestResult;
+
+            expect(() => {
+                reporter.onTestBegin(mockTest, mockResult);
+                reporter.onTestEnd(mockTest, mockResult);
+            }).not.toThrow();
+        });
+
+        test('handles failure with null error message', () => {
+            const mockTest = createMockTestCase('null-error-failure', 'Null Error Failure Test');
+            const mockResult = {
+                ...createMockTestResult('failed'),
+                error: null
+            } as unknown as TestResult;
+
+            expect(() => {
+                reporter.onTestBegin(mockTest, mockResult);
+                reporter.onTestEnd(mockTest, mockResult);
+            }).not.toThrow();
+        });
+    });
+
+    describe('Timeout Tests', () => {
+        test('handles timeout with custom error message', () => {
+            const mockTest = createMockTestCase('timeout-test', 'Timeout Test');
+            const timeoutError = new Error('Test execution timed out after 30 seconds');
+            
+            const mockResult = {
+                ...createMockTestResult('timedOut'),
+                error: timeoutError
+            } as unknown as TestResult;
+
+            expect(() => {
+                reporter.onTestBegin(mockTest, mockResult);
+                reporter.onTestEnd(mockTest, mockResult);
+            }).not.toThrow();
+        });
+
+        test('handles timeout with stack trace', () => {
+            const mockTest = createMockTestCase('timeout-stack-test', 'Timeout Stack Test');
+            const error = new Error('Test timed out');
+            error.stack = 'Error: Test timed out\n    at Test.run (/path/to/test.js:30:20)';
+            
+            const mockResult = {
+                ...createMockTestResult('timedOut'),
+                error
+            } as unknown as TestResult;
+
+            expect(() => {
+                reporter.onTestBegin(mockTest, mockResult);
+                reporter.onTestEnd(mockTest, mockResult);
+            }).not.toThrow();
+        });
+
+        test('timeout tests set hasFailures flag', () => {
+            const mockTest = createMockTestCase('timeout-flag-test', 'Timeout Flag Test');
+            const mockResult = createMockTestResult('timedOut');
+
+            reporter.onTestBegin(mockTest, mockResult);
+            reporter.onTestEnd(mockTest, mockResult);
+
+            // Access private property for testing
+            const hasFailures = (reporter as any).hasFailures;
+            expect(hasFailures).toBe(true);
+        });
+
+        test('handles timeout with undefined error', () => {
+            const mockTest = createMockTestCase('timeout-no-error', 'Timeout No Error Test');
+            const mockResult = {
+                ...createMockTestResult('timedOut'),
+                error: undefined
+            } as unknown as TestResult;
+
+            expect(() => {
+                reporter.onTestBegin(mockTest, mockResult);
+                reporter.onTestEnd(mockTest, mockResult);
+            }).not.toThrow();
+        });
+    });
+
+    describe('Mixed Status Tests', () => {
+        test('handles mixed test statuses correctly', () => {
+            const testScenarios = [
+                {id: 'test-1', title: 'Passing Test', status: 'passed' as const},
+                {id: 'test-2', title: 'Failing Test', status: 'failed' as const},
+                {id: 'test-3', title: 'Skipped Test', status: 'skipped' as const},
+                {id: 'test-4', title: 'Timeout Test', status: 'timedOut' as const},
+                {id: 'test-5', title: 'Interrupted Test', status: 'interrupted' as const}
+            ];
+
+            testScenarios.forEach(({id, title, status}) => {
+                const mockTest = createMockTestCase(id, title);
+                const mockResult = createMockTestResult(status);
+
+                expect(() => {
+                    reporter.onTestBegin(mockTest, mockResult);
+                    reporter.onTestEnd(mockTest, mockResult);
+                }).not.toThrow();
+            });
+        });
+
+        test('hasFailures flag is set when any test fails, times out, or is interrupted', () => {
+            const failingTests = [
+                {id: 'fail-1', title: 'First Failure', status: 'failed' as const},
+                {id: 'timeout-1', title: 'First Timeout', status: 'timedOut' as const},
+                {id: 'interrupt-1', title: 'First Interrupt', status: 'interrupted' as const}
+            ];
+
+            failingTests.forEach(({id, title, status}) => {
+                const mockTest = createMockTestCase(id, title);
+                const mockResult = createMockTestResult(status);
+
+                reporter.onTestBegin(mockTest, mockResult);
+                reporter.onTestEnd(mockTest, mockResult);
+            });
+
+            // Access private property for testing
+            const hasFailures = (reporter as any).hasFailures;
+            expect(hasFailures).toBe(true);
+        });
+
+        test('hasFailures flag remains false when only passing and skipped tests', () => {
+            const passingTests = [
+                {id: 'pass-1', title: 'First Pass', status: 'passed' as const},
+                {id: 'skip-1', title: 'First Skip', status: 'skipped' as const},
+                {id: 'pass-2', title: 'Second Pass', status: 'passed' as const}
+            ];
+
+            passingTests.forEach(({id, title, status}) => {
+                const mockTest = createMockTestCase(id, title);
+                const mockResult = createMockTestResult(status);
+
+                reporter.onTestBegin(mockTest, mockResult);
+                reporter.onTestEnd(mockTest, mockResult);
+            });
+
+            // Access private property for testing
+            const hasFailures = (reporter as any).hasFailures;
+            expect(hasFailures).toBe(false);
+        });
     });
 
     describe('Error Handling Tests', () => {
