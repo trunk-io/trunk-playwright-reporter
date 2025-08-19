@@ -34,5 +34,4 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 .DS_Store
 test/target/test-results
 test/target/junit.xml
-/test/target/test-results
-test/target/report.xml
+test/target/junit-built-in.xml
