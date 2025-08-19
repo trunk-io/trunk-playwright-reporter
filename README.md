@@ -53,7 +53,8 @@ While Playwright includes a built-in JUnit reporter, the Trunk Reporter offers:
 - **Accurate `testsuite`/`classname`** - Uses suite/title semantics instead of file-name fallbacks for cleaner grouping
 - **Full file path** - Emits source location so downstream tools can deep-link to code.
 
-> ℹ️ **Who is this for?**  
+> [!NOTE]  
+> **Who is this for?**  
 > Anyone producing JUnit XML from Playwright. 
 > It’s optimized for Trunk Flaky Tests, but the output benefits any JUnit consumer (CI parsers, dashboards, or artifact analysis).
 
