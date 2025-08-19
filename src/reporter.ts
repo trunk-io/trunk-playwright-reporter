@@ -15,18 +15,12 @@ export class TrunkReporter implements Reporter {
     private testCases = new Map<string, TestCase>();
 
     onBegin(config: FullConfig, suite: Suite) {
-        switch (suite.type) {
-            case 'root':
-                this.testSuite.name('playwright tests').timestamp(new Date().toISOString());
-                break;
-            case 'describe':
-                this.testSuite.name(suite.title);
-                break;
-        }
+        this.testSuite.timestamp(new Date().toISOString());
     }
 
     onTestBegin(test: TestCase, _result: TestResult) {
         this.testCases.set(test.id, test);
+        this.testSuite.name(test.parent?.title || 'playwright tests')
     }
 
     onTestEnd(test: TestCase, result: TestResult) {
@@ -42,11 +36,11 @@ export class TrunkReporter implements Reporter {
         switch (result.status) {
             case "failed":
                 this.hasFailures = true;
-                junit.failure(result.error?.message || "Test failed due to unknown error").stacktrace(result.error?.stack, "FAILURE")
+                junit.failure(result.error?.message || "Test failed due to unknown error", "FAILURE").stacktrace(result.error?.stack)
                 break
             case 'timedOut':
                 this.hasFailures = true;
-                junit.failure(result.error?.message || "Test timed out","TIMEOUT")
+                junit.failure(result.error?.message || "Test timed out", "TIMEOUT")
                 break
             case "interrupted":
                 this.hasFailures = true;
@@ -59,8 +53,6 @@ export class TrunkReporter implements Reporter {
                 break
         }
 
-
-        // Clean up the stored test case
         this.testCases.delete(test.id);
     }
 
