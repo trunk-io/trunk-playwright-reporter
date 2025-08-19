@@ -57,7 +57,7 @@ export class TrunkReporter implements Reporter {
             .time(result.duration)
             .file(test.location?.file || 'unknown-file')
             .className(test.parent?.title || 'Unknown Suite');
-            
+
         // Clean up the stored test case
         this.testCases.delete(test.id);
     }
