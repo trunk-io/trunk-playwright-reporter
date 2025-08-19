@@ -1,0 +1,40 @@
+<testsuites id="" name="" tests="3" failures="1" skipped="0" errors="0" time="8.527541">
+<testsuite name="demo.test.ts" timestamp="2025-08-19T15:40:32.111Z" hostname="" tests="3" failures="1" skipped="0" time="5.217" errors="0">
+<testcase name="Tests defined within`test.describe()` › home page has expected h1" classname="demo.test.ts" time="0.085">
+</testcase>
+<testcase name="Tests defined within`test.describe()` › home page has expected p" classname="demo.test.ts" time="0.065">
+</testcase>
+<testcase name="Tests defined within`test.describe()` › home page has expected h2 (failure intended)" classname="demo.test.ts" time="5.067">
+<failure message="demo.test.ts:14:5 home page has expected h2 (failure intended)" type="FAILURE">
+<![CDATA[  demo.test.ts:14:5 › Tests defined within`test.describe()` › home page has expected h2 (failure intended) 
+
+    Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('h2')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('h2')
+
+
+      14 |     test('home page has expected h2 (failure intended)', async ({page}) => {
+      15 |         await page.goto('/');
+    > 16 |         await expect(page.locator('h2')).toBeVisible();
+         |                                          ^
+      17 |     });
+      18 | });
+      19 |
+        at /Users/iamwill/code/@trunk-io/trunk-playwright-reporter/test/target/e2e/demo.test.ts:16:42
+
+    Error Context: ../test-results/demo-Tests-defined-within--a6e66-pected-h2-failure-intended-/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/demo-Tests-defined-within--a6e66-pected-h2-failure-intended-/error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

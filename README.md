@@ -10,13 +10,6 @@
 
 This package exports a Playwright [custom reporter](https://playwright.dev/docs/test-reporters#custom-reporters) for integration with  [Trunk Flaky Tests](https://trunk.io/flaky-tests).
 
-## Features
-
-- **Simple Integration** - Easy to add to any Playwright project
-- **Trunk.io Optimized** - Designed specifically for Trunk.io workflows
-- **Lightweight** - Minimal overhead, focused functionality
-- **Reliable** - Handles various test scenarios and failure modes
-
 ## Installation
 
 Install the package using your preferred package manager:
@@ -57,17 +50,16 @@ While Playwright includes a built-in JUnit reporter, the Trunk Reporter offers:
 - **Better Trunk.io Integration** - Trunk-optimized JUnit output
 - **Simplified Configuration** - Easier setup and maintenance
 - **Focused Functionality** - Purpose-built for [Trunk Flaky Tests](https://trunk.io/flaky-tests)
+- **Accurate `testsuite`/`classname`** - Uses suite/title semantics instead of file-name fallbacks for cleaner grouping
+- **Full file path** - Emits source location so downstream tools can deep-link to code.
+
+> ℹ️ **Who is this for?**  
+> Anyone producing JUnit XML from Playwright. 
+> It’s optimized for Trunk Flaky Tests, but the output benefits any JUnit consumer (CI parsers, dashboards, or artifact analysis).
 
 ## Examples
 
 See the [test/target/](test/target/) directory for a complete example project that demonstrates how to use the Trunk Reporter in an existing Playwright testsuite.
-
-## Related Projects
-
-This reporter is part of the Trunk.io ecosystem. Check out other Trunk tools:
-
-- [Trunk Action](https://github.com/trunk-io/trunk-action) - GitHub Action for Trunk
-- [Trunk VS Code Extension](https://marketplace.visualstudio.com/items?itemName=Trunk.io) - VS Code integration
 
 ---
 

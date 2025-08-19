@@ -12,12 +12,12 @@ import builder from 'junit-report-builder';
 export class TrunkReporter implements Reporter {
     private testSuite = builder.testSuite();
     private hasFailures = false;
-    private testCases = new Map<string, any>(); // Store test cases by test ID
+    private testCases = new Map<string, TestCase>();
 
     onBegin(config: FullConfig, suite: Suite) {
         switch (suite.type) {
             case 'root':
-                this.testSuite.name('playwright tests').timestamp(new Date(Date.now()));
+                this.testSuite.name('playwright tests').timestamp(new Date().toISOString());
                 break;
             case 'describe':
                 this.testSuite.name(suite.title);
@@ -26,37 +26,39 @@ export class TrunkReporter implements Reporter {
     }
 
     onTestBegin(test: TestCase, _result: TestResult) {
-        // Create test case and store start time
-        const testCase = this.testSuite.testCase();
-
-        // Store the test case for later completion
-        this.testCases.set(test.id, testCase);
+        this.testCases.set(test.id, test);
     }
 
     onTestEnd(test: TestCase, result: TestResult) {
-        // Get the test case we created earlier
         const testCase = this.testCases.get(test.id);
         if (!testCase) return;
 
+        const junit = this.testSuite.testCase()
+            .name(test.title || 'Unknown Test')
+            .time(result.duration)
+            .file(test.location?.file || 'unknown-file')
+            .className(test.parent?.title || 'Unknown Suite');
+
         switch (result.status) {
             case "failed":
+                this.hasFailures = true;
+                junit.failure(result.error?.message || "Test failed due to unknown error").stacktrace(result.error?.stack, "FAILURE")
+                break
             case 'timedOut':
+                this.hasFailures = true;
+                junit.failure(result.error?.message || "Test timed out","TIMEOUT")
+                break
             case "interrupted":
                 this.hasFailures = true;
-                testCase.failure(result.error?.message)
+                junit.failure(result.error?.message || "Test interrupted", "INTERRUPTED")
                 break
             case 'skipped':
-                testCase.skipped()
+                junit.skipped()
                 break;
             case 'passed':
                 break
         }
 
-        testCase
-            .name(test.title || 'Unknown Test')
-            .time(result.duration)
-            .file(test.location?.file || 'unknown-file')
-            .className(test.parent?.title || 'Unknown Suite');
 
         // Clean up the stored test case
         this.testCases.delete(test.id);
