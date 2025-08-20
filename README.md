@@ -8,7 +8,7 @@
 
 # Trunk.io Playwright Reporter
 
-This package exports a Playwright [custom reporter](https://playwright.dev/docs/test-reporters#custom-reporters) for integration with  [Trunk Flaky Tests](https://trunk.io/flaky-tests).
+This package exports a [Playwright custom reporter](https://playwright.dev/docs/test-reporters#custom-reporters) for integration with [Trunk Flaky Tests](https://trunk.io/flaky-tests).
 
 ## Installation
 
@@ -19,6 +19,8 @@ npm install @trunkio/trunk-playwright-reporter
 ```
 
 ## Configuration
+
+Set the reporter using eitgher option below.
 
 ### Option 1: Configuration File
 
@@ -44,6 +46,10 @@ Use the reporter directly from the command line:
 npx playwright test --reporter="@trunkio/trunk-playwright-reporter"
 ```
 
+## Examples
+
+See the [test/target/](test/target/) directory for a complete example project that demonstrates how to use the Trunk Reporter in an existing Playwright testsuite.
+
 ## Why Trunk Reporter?
 
 While Playwright includes a built-in JUnit reporter, the Trunk Reporter offers:
@@ -57,10 +63,6 @@ While Playwright includes a built-in JUnit reporter, the Trunk Reporter offers:
 > **Who is this for?**  
 > Anyone producing JUnit XML from Playwright. 
 > It’s optimized for Trunk Flaky Tests, but the output benefits any JUnit consumer (CI parsers, dashboards, or artifact analysis).
-
-## Examples
-
-See the [test/target/](test/target/) directory for a complete example project that demonstrates how to use the Trunk Reporter in an existing Playwright testsuite.
 
 ---
 
