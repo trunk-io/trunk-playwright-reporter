@@ -20,7 +20,7 @@ npm install @trunkio/trunk-playwright-reporter
 
 ## Configuration
 
-Set the reporter using eitgher option below.
+Set the reporter using either option below. 
 
 ### Option 1: Configuration File
 
@@ -44,6 +44,14 @@ Use the reporter directly from the command line:
 
 ```bash
 npx playwright test --reporter="@trunkio/trunk-playwright-reporter"
+```
+
+### File Output
+
+By default, the reporter outputs a file named `junit.xml` at the root of your project, but you can specify a different filename via an environment variable:
+
+```bash
+PLAYWRIGHT_JUNIT_OUTPUT_FILE=/your/custom/path/your_file_name.xml
 ```
 
 ## Examples
