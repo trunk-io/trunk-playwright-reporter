@@ -48,7 +48,21 @@ npx playwright test --reporter="@trunkio/trunk-playwright-reporter"
 
 ### File Output
 
-By default, the reporter outputs a file named `junit.xml` at the root of your project, but you can specify a different filename via an environment variable:
+By default, the reporter outputs a file named `junit.xml` at the root of your project. Specify a different filename using one of the options below.
+
+#### Programmatically
+
+```ts
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+  reporter: [
+    ['@trunkio/trunk-playwright-reporter', { outputFile: '/your/custom/path/your_file_name.xml'}] // 👈set custom file path 
+  ],
+});
+```
+
+#### Via an environmental variable
 
 ```bash
 PLAYWRIGHT_JUNIT_OUTPUT_FILE=/your/custom/path/your_file_name.xml
