@@ -8,5 +8,5 @@ export default defineConfig({
 		port: 4173
 	},
 	testDir: 'e2e',
-	reporter: [['list'], ['@trunkio/trunk-playwright-reporter'], ['junit', { outputFile: 'junit-built-in.xml' }]]
+	reporter: [['list'], ['@trunkio/trunk-playwright-reporter', { outputFile: 'output.xml' }]]
 });
