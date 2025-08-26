@@ -51,7 +51,7 @@ describe("Reporter Junit Output", () => {
     let parsedXml: any;
 
     beforeAll(async () => {
-        const content = await file(`test/target/junit.xml`).text()
+        const content = await file(`test/target/output.xml`).text()
         const options: X2jOptions = {
             attributeNamePrefix: "@@",
             ignoreAttributes: false
@@ -640,9 +640,15 @@ describe('Reporter Resilience Tests', () => {
     describe('Edge Case Tests', () => {
         test('handles empty test suites', () => {
             const emptySuite = createMockSuite('root', 'Empty Suite');
+            const mockConfig = {
+                reporter: [
+                    ['list'],
+                    ['@trunkio/trunk-playwright-reporter', { outputFile: 'test-output.xml' }]
+                ]
+            } as unknown as FullConfig;
 
             expect(() => {
-                reporter.onBegin({} as FullConfig, emptySuite);
+                reporter.onBegin(mockConfig, emptySuite);
             }).not.toThrow();
         });
 
