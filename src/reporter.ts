@@ -12,10 +12,14 @@ import builder from 'junit-report-builder';
 export class TrunkReporter implements Reporter {
     private testSuites = new Map<string, any>(); // Map file path to test suite
     private hasFailures = false;
-    private rootSuite: Suite | null = null;
+    private outputFile = 'junit.xml'
 
     onBegin(config: FullConfig, suite: Suite) {
-        this.rootSuite = suite;
+        const testArgs = config.reporter.at(1)!
+        const testOpts = testArgs.at(1)
+        if (testOpts) {
+            this.outputFile = testOpts["outputFile"] ?? (process.env.PLAYWRIGHT_JUNIT_OUTPUT_FILE as string || this.outputFile);
+        }
         // Note: junit-report-builder doesn't support setting timestamp on the root level
     }
 
@@ -76,7 +80,7 @@ export class TrunkReporter implements Reporter {
         // Note: junit-report-builder doesn't support setting time on the root level
         // The time is calculated automatically from the test suites
         
-        builder.writeTo(process.env.PLAYWRIGHT_JUNIT_OUTPUT_FILE as string || 'junit.xml');
+        builder.writeTo(this.outputFile);
         
         // Use setTimeout to ensure the report is written before exiting
         setTimeout(() => {
