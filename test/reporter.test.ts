@@ -1,4 +1,4 @@
-import {beforeAll, describe, expect, test, beforeEach} from 'bun:test';
+import {beforeAll, describe, expect, test, beforeEach, afterEach} from 'bun:test';
 import {$, file} from 'bun';
 import {type X2jOptions, XMLParser} from 'fast-xml-parser';
 import {TrunkReporter} from '../src/reporter';
@@ -637,7 +637,77 @@ describe('Reporter Resilience Tests', () => {
         });
     });
 
-    describe('Edge Case Tests', () => {
+    describe('Configuration Tests', () => {
+        let originalEnvVar: string | undefined;
+
+        beforeEach(() => {
+            // Store original environment variable
+            originalEnvVar = process.env.PLAYWRIGHT_JUNIT_OUTPUT_FILE;
+        });
+
+        afterEach(() => {
+            // Restore original environment variable
+            if (originalEnvVar !== undefined) {
+                process.env.PLAYWRIGHT_JUNIT_OUTPUT_FILE = originalEnvVar;
+            } else {
+                delete process.env.PLAYWRIGHT_JUNIT_OUTPUT_FILE;
+            }
+        });
+
+        test('uses programmatic outputFile configuration when provided', () => {
+            const emptySuite = createMockSuite('root', 'Test Suite');
+            const mockConfig = {
+                reporter: [
+                    ['list'],
+                    ['@trunkio/trunk-playwright-reporter', { outputFile: 'programmatic-output.xml' }]
+                ]
+            } as unknown as FullConfig;
+
+            // Set environment variable to test that programmatic config takes precedence
+            process.env.PLAYWRIGHT_JUNIT_OUTPUT_FILE = 'env-var-output.xml';
+
+            const testReporter = new TrunkReporter();
+            testReporter.onBegin(mockConfig, emptySuite);
+
+            // Access private property for testing (using any to bypass TypeScript)
+            expect((testReporter as any).outputFile).toBe('programmatic-output.xml');
+        });
+
+        test('falls back to environment variable when no programmatic config provided', () => {
+            const emptySuite = createMockSuite('root', 'Test Suite');
+            const mockConfig = {
+                reporter: [
+                    ['list'],
+                    ['@trunkio/trunk-playwright-reporter'] // No options
+                ]
+            } as unknown as FullConfig;
+
+            process.env.PLAYWRIGHT_JUNIT_OUTPUT_FILE = 'env-var-output.xml';
+
+            const testReporter = new TrunkReporter();
+            testReporter.onBegin(mockConfig, emptySuite);
+
+            expect((testReporter as any).outputFile).toBe('env-var-output.xml');
+        });
+
+        test('uses default outputFile when neither programmatic config nor env var provided', () => {
+            const emptySuite = createMockSuite('root', 'Test Suite');
+            const mockConfig = {
+                reporter: [
+                    ['list'],
+                    ['@trunkio/trunk-playwright-reporter'] // No options
+                ]
+            } as unknown as FullConfig;
+
+            // Ensure environment variable is not set
+            delete process.env.PLAYWRIGHT_JUNIT_OUTPUT_FILE;
+
+            const testReporter = new TrunkReporter();
+            testReporter.onBegin(mockConfig, emptySuite);
+
+            expect((testReporter as any).outputFile).toBe('junit.xml');
+        });
+
         test('handles empty test suites', () => {
             const emptySuite = createMockSuite('root', 'Empty Suite');
             const mockConfig = {
@@ -651,7 +721,9 @@ describe('Reporter Resilience Tests', () => {
                 reporter.onBegin(mockConfig, emptySuite);
             }).not.toThrow();
         });
+    });
 
+    describe('Edge Case Tests', () => {
         test('handles tests with very long titles', () => {
             const longTitle = 'A'.repeat(10000); // Very long title
             const mockTest = createMockTestCase('test-1', longTitle);

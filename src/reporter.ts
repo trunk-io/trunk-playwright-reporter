@@ -17,8 +17,10 @@ export class TrunkReporter implements Reporter {
     onBegin(config: FullConfig, suite: Suite) {
         const testArgs = config.reporter.at(1)!
         const testOpts = testArgs.at(1)
-        if (testOpts) {
-            this.outputFile = testOpts["outputFile"] ?? (process.env.PLAYWRIGHT_JUNIT_OUTPUT_FILE as string || this.outputFile);
+        if (testOpts && testOpts["outputFile"]) {
+            this.outputFile = testOpts["outputFile"];
+        } else if (process.env.PLAYWRIGHT_JUNIT_OUTPUT_FILE) {
+            this.outputFile = process.env.PLAYWRIGHT_JUNIT_OUTPUT_FILE;
         }
         // Note: junit-report-builder doesn't support setting timestamp on the root level
     }
