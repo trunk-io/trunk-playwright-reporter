@@ -3,12 +3,6 @@ name: Publish package to npmjs
 on:
   release:
     types: [published]
-  pull_request:
-    paths-ignore:
-      - '.github/**'
-      - '.vscode/**'
-      - '.idea/**'
-      - 'README.md'
   workflow_dispatch:
 
 jobs:
