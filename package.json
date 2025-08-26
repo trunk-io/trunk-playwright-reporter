@@ -34,7 +34,7 @@
     "fast-xml-parser": "^5.2.5"
   },
   "peerDependencies": {
-    "@playwright/test": "^1.54.2",
+    "@playwright/test": "^1.38.0",
     "typescript": "^5"
   },
   "dependencies": {
@@ -42,6 +42,6 @@
   },
   "publishConfig": {
     "access": "public",
-    "tag": "alpha"
+    "tag": "beta"
   }
 }
