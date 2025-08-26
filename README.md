@@ -31,8 +31,11 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   reporter: [
-    ['list'], // Keep your preferred console reporter
-    ['@trunkio/trunk-playwright-reporter'] // 👈 Add the Trunk reporter
+    ['list'], // You can keep your preferred console reporter
+    [
+        '@trunkio/trunk-playwright-reporter',
+        { outputFile: '/custom/path/your_file_name.xml'}
+    ]
   ],
   // ... other config options
 });
@@ -48,10 +51,10 @@ npx playwright test --reporter="@trunkio/trunk-playwright-reporter"
 
 ### File Output
 
-By default, the reporter outputs a file named `junit.xml` at the root of your project, but you can specify a different filename via an environment variable:
+By default, the reporter outputs a file named `junit.xml` at the root of your project. You can specify a different filename in your Playwright config or via an environment variable.
 
 ```bash
-PLAYWRIGHT_JUNIT_OUTPUT_FILE=/your/custom/path/your_file_name.xml
+PLAYWRIGHT_JUNIT_OUTPUT_FILE=/custom/path/your_file_name.xml
 ```
 
 ## Examples
