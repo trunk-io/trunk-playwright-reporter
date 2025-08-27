@@ -15,14 +15,23 @@ export class TrunkReporter implements Reporter {
     private outputFile = 'junit.xml'
 
     onBegin(config: FullConfig, suite: Suite) {
-        const testArgs = config.reporter.at(1)!
-        const testOpts = testArgs.at(1)
+        let testOpts: any = undefined;
+        if (config.reporter && Array.isArray(config.reporter)) {
+            for (const reporterConfig of config.reporter) {
+                if (Array.isArray(reporterConfig) &&
+                    (reporterConfig[0] === '@trunkio/trunk-playwright-reporter' || 
+                     reporterConfig[0].includes('trunk-playwright-reporter'))) {
+                    testOpts = reporterConfig[1];
+                    break;
+                }
+            }
+        }
+
         if (testOpts && testOpts["outputFile"]) {
             this.outputFile = testOpts["outputFile"];
         } else if (process.env.PLAYWRIGHT_JUNIT_OUTPUT_FILE) {
             this.outputFile = process.env.PLAYWRIGHT_JUNIT_OUTPUT_FILE;
         }
-        // Note: junit-report-builder doesn't support setting timestamp on the root level
     }
 
     private getOrCreateTestSuite(filePath: string, suiteName: string) {
@@ -44,13 +53,13 @@ export class TrunkReporter implements Reporter {
     onTestEnd(test: TestCase, result: TestResult) {
         const filePath = test.location?.file || 'unknown-file';
         const suiteName = test.parent?.title || 'Unknown Suite';
-        
+
         // Get or create the test suite for this file
         const testSuite = this.getOrCreateTestSuite(filePath, suiteName);
-        
+
         // Extract just the filename from the path for the classname
         const fileName = filePath.split('/').pop() || filePath;
-        
+
         const junit = testSuite.testCase()
             .name(test.title || 'Unknown Test')
             .time(result.duration)
@@ -81,9 +90,9 @@ export class TrunkReporter implements Reporter {
     onEnd(result: FullResult) {
         // Note: junit-report-builder doesn't support setting time on the root level
         // The time is calculated automatically from the test suites
-        
+
         builder.writeTo(this.outputFile);
-        
+
         // Use setTimeout to ensure the report is written before exiting
         setTimeout(() => {
             process.exit(this.hasFailures ? 1 : 0);

@@ -708,6 +708,49 @@ describe('Reporter Resilience Tests', () => {
             expect((testReporter as any).outputFile).toBe('junit.xml');
         });
 
+        test('handles reporter configuration when not in second position', () => {
+            const emptySuite = createMockSuite('root', 'Test Suite');
+            const mockConfig = {
+                reporter: [
+                    ['@trunkio/trunk-playwright-reporter', { outputFile: 'first-position.xml' }],
+                    ['list']
+                ]
+            } as unknown as FullConfig;
+
+            const testReporter = new TrunkReporter();
+            testReporter.onBegin(mockConfig, emptySuite);
+
+            expect((testReporter as any).outputFile).toBe('first-position.xml');
+        });
+
+        test('handles single reporter configuration', () => {
+            const emptySuite = createMockSuite('root', 'Test Suite');
+            const mockConfig = {
+                reporter: ['@trunkio/trunk-playwright-reporter']
+            } as unknown as FullConfig;
+
+            const testReporter = new TrunkReporter();
+            testReporter.onBegin(mockConfig, emptySuite);
+
+            expect((testReporter as any).outputFile).toBe('junit.xml');
+        });
+
+        test('handles empty reporter configuration gracefully', () => {
+            const emptySuite = createMockSuite('root', 'Test Suite');
+            const mockConfig = {
+                reporter: []
+            } as unknown as FullConfig;
+
+            const testReporter = new TrunkReporter();
+            
+            // Should not throw an error
+            expect(() => {
+                testReporter.onBegin(mockConfig, emptySuite);
+            }).not.toThrow();
+            
+            expect((testReporter as any).outputFile).toBe('junit.xml');
+        });
+
         test('handles empty test suites', () => {
             const emptySuite = createMockSuite('root', 'Empty Suite');
             const mockConfig = {

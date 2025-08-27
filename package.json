@@ -9,7 +9,7 @@
   "homepage": "https://trunk.io",
   "bugs": "https://github.com/ttrunk-io/trunk-playwright-reporter/issues",
   "license": "MIT",
-  "version": "1.0.0-beta.10",
+  "version": "1.0.0-beta.11",
   "repository": {
     "type": "git",
     "url": "https://github.com/trunk-io/trunk-playwright-reporter.git"
