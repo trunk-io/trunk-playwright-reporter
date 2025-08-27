@@ -19,7 +19,8 @@ export class TrunkReporter implements Reporter {
         if (config.reporter && Array.isArray(config.reporter)) {
             for (const reporterConfig of config.reporter) {
                 if (Array.isArray(reporterConfig) &&
-                    reporterConfig[0] === '@trunkio/trunk-playwright-reporter') {
+                    (reporterConfig[0] === '@trunkio/trunk-playwright-reporter' || 
+                     reporterConfig[0].includes('trunk-playwright-reporter'))) {
                     testOpts = reporterConfig[1];
                     break;
                 }
