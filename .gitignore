@@ -35,3 +35,5 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 test/target/test-results
 test/target/junit.xml
 test/target/junit-built-in.xml
+test/target/junit-builtin.xml
+test/target/trunk-reporter.xml
